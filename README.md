@@ -1,7 +1,5 @@
-# DMP-Assignment-2
-
-# Install yfinance if not already installed
-# !pip install yfinance
+# This code downloads Apple stock data for 2023, calculates daily returns and rolling volatility,
+# and generates two graphs: one for stock price and another for volatility.
 
 import yfinance as yf
 import pandas as pd
@@ -17,30 +15,27 @@ apple['Daily Return'] = apple['Close'].pct_change()
 # 3. Calculate rolling volatility (30-day window, annualised)
 apple['Volatility (30d)'] = apple['Daily Return'].rolling(window=30).std() * (252 ** 0.5)
 
-# --- Graph 1: Apple Stock Price ---
-plt.figure(figsize=(12,6))
-plt.plot(apple.index, apple['Close'], label='Apple Stock Price', color='green')
-plt.title("Apple (AAPL) Stock Price - Jan to Dec 2023")
-plt.xlabel("Date")
-plt.ylabel("Price (USD)")
-plt.legend()
-plt.grid(True)
+fig, axs = plt.subplots(2, 1, figsize=(12, 12))
 
-# Format x-axis for readability
-plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=1))
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%b"))
-plt.show()
+# --- Graph 1: Apple Stock Price ---
+axs[0].plot(apple.index, apple['Close'], label='Apple Stock Price', color='green')
+axs[0].set_title("Apple (AAPL) Stock Price - Jan to Dec 2023")
+axs[0].set_xlabel("Date")
+axs[0].set_ylabel("Price (USD)")
+axs[0].legend()
+axs[0].grid(True)
+axs[0].xaxis.set_major_locator(mdates.MonthLocator(interval=1))
+axs[0].xaxis.set_major_formatter(mdates.DateFormatter("%b"))
 
 # --- Graph 2: Apple Stock Volatility ---
-plt.figure(figsize=(12,6))
-plt.plot(apple.index, apple['Volatility (30d)'], label='30-Day Rolling Volatility (Annualised)', color='blue')
-plt.title("Apple (AAPL) Stock Volatility - Jan to Dec 2023")
-plt.xlabel("Date")
-plt.ylabel("Volatility (Annualised)")
-plt.legend()
-plt.grid(True)
+axs[1].plot(apple.index, apple['Volatility (30d)'], label='30-Day Rolling Volatility (Annualised)', color='blue')
+axs[1].set_title("Apple (AAPL) Stock Volatility - Jan to Dec 2023")
+axs[1].set_xlabel("Date")
+axs[1].set_ylabel("Volatility (Annualised)")
+axs[1].legend()
+axs[1].grid(True)
+axs[1].xaxis.set_major_locator(mdates.MonthLocator(interval=1))
+axs[1].xaxis.set_major_formatter(mdates.DateFormatter("%b"))
 
-# Format x-axis for readability
-plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=1))
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%b"))
+plt.tight_layout()
 plt.show()
